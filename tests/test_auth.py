@@ -24,3 +24,9 @@ def test_valid_key(client, auth_headers):
     body = response.json()
     assert body["movie_count"] >= 1
     assert body["theater_count"] == 12
+
+
+def test_env_key_works_without_db_row(client, monkeypatch):
+    monkeypatch.setenv("MF_API_KEY", "mf_live_only_in_env_not_in_db")
+    response = client.get("/meta", headers={"X-API-Key": "mf_live_only_in_env_not_in_db"})
+    assert response.status_code == 200
