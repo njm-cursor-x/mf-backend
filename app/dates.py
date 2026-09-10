@@ -1,10 +1,13 @@
-from datetime import date, datetime, timedelta
-from zoneinfo import ZoneInfo
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from app.config import settings
 from app.errors import ApiError
 
-TZ = ZoneInfo(settings.mf_tz)
+try:
+    TZ = ZoneInfo(settings.mf_tz)
+except ZoneInfoNotFoundError:
+    TZ = timezone.utc
 
 RELATIVE_DATES = {"today", "tomorrow"}
 
