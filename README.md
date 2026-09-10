@@ -75,10 +75,18 @@ v1 roster: AMC and Regal houses in Manhattan. Alamo Drafthouse Lower Manhattan i
 ## Host on Railway
 
 1. New project → deploy from GitHub → `njm-cursor-x/mf-backend`.
-2. Variables: `MF_API_KEY=mf_live_…` (use a minted key).
-3. Confirm `GET https://<your-app>.up.railway.app/health` returns `{"status":"ok"}` without VPN.
+2. Builder: **Dockerfile** (not Railpack).
+3. **Custom Start Command must be set** to `python -m app.run`.
+   Leaving it blank does **not** use the Dockerfile. Railway falls back to a
+   cached detected command: `uvicorn … --port ${PORT:-8000}`. That is shell
+   syntax. Railway runs it without a shell, so uvicorn treats the literal
+   `${PORT:-8000}` as the port and exits.
+4. Variables: `MF_API_KEY=mf_live_…` (use a minted key).
+5. Public domain target port: **8080** (Railway `$PORT`), not 80.
+6. Confirm deploy logs print `mf-backend run.py listening on 0.0.0.0:…`
+   then `Uvicorn running`. Then `GET https://<your-app>.up.railway.app/health`.
 
-Dockerfile and `Procfile` are in the repo. This is a long-lived process, not GitHub Pages or Vercel.
+This is a long-lived process, not GitHub Pages or Vercel.
 
 ## Tests
 
