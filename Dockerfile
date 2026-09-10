@@ -19,6 +19,5 @@ COPY start.sh ./start.sh
 RUN chmod +x start.sh
 
 EXPOSE 8080
-# ENTRYPOINT stays even when Railway overrides CMD with a broken uvicorn line.
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["python", "-m", "app.run"]
 CMD []
