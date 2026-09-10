@@ -3,6 +3,8 @@ FROM python:3.12-slim
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PORT=8080
+ENV MF_BOOT=entrypoint-v2
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends tzdata \
@@ -16,6 +18,7 @@ COPY data ./data
 COPY start.sh ./start.sh
 RUN chmod +x start.sh
 
-ENV PORT=8080
 EXPOSE 8080
-CMD ["./start.sh"]
+# ENTRYPOINT stays even when Railway overrides CMD with a broken uvicorn line.
+ENTRYPOINT ["./start.sh"]
+CMD []
