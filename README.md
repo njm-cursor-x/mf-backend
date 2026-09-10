@@ -1,1 +1,87 @@
-Readme info will go gere
+# MovieFone Manhattan showtimes API
+
+Unofficial recreation of the lookup brain behind classic MovieFone (777-FILM). **Not affiliated with MovieFone, Fandango, AMC, Regal, or Alamo Drafthouse.**
+
+This repo is a small FastAPI service the Grok voice agent will call later. Callers say a **ZIP**, then a **movie name**. Coverage is **Manhattan only**.
+
+## Run locally
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# optional: replace MF_API_KEY, or mint one:
+python -m app.keys create --name local
+uvicorn app.main:app --reload --port 8000
+```
+
+On boot the app loads `data/theaters.json`, `data/zips.json`, and the latest snapshot under `data/snapshots/` into SQLite. The seed snapshot is enough to answer queries before a live scrape.
+
+## Auth
+
+All query routes require:
+
+```
+X-API-Key: mf_live_…
+```
+
+`GET /health` is public.
+
+```bash
+python -m app.keys create --name grok-voice   # prints the key once
+python -m app.keys list
+python -m app.keys revoke --name grok-voice
+```
+
+Only the SHA-256 hash is stored. Never commit plaintext keys. On Railway, set `MF_API_KEY` in Variables (or mint a key after first boot and keep it in Variables).
+
+## Zip then title
+
+```bash
+export KEY=mf_live_replace_me
+
+curl -s -H "X-API-Key: $KEY" http://127.0.0.1:8000/zips/10023
+curl -s -H "X-API-Key: $KEY" "http://127.0.0.1:8000/movies/search?q=the%20odysy&zip_code=10023"
+curl -s -H "X-API-Key: $KEY" "http://127.0.0.1:8000/showtimes?movie_id=the-odyssey&zip_code=10023&date=today"
+```
+
+| operationId | method | path |
+|---|---|---|
+| `health` | GET | `/health` |
+| `get_meta` | GET | `/meta` |
+| `resolve_zip` | GET | `/zips/{zip_code}` |
+| `list_movies` | GET | `/movies` |
+| `search_movies` | GET | `/movies/search?q=` |
+| `get_movie` | GET | `/movies/{movie_id}` |
+| `list_theaters` | GET | `/theaters` |
+| `get_showtimes` | GET | `/showtimes` |
+
+OpenAPI: `http://127.0.0.1:8000/openapi.json` (public, no secrets).
+
+Non-Manhattan ZIPs return `404` with `"code": "OUT_OF_AREA"`.
+
+## Refresh listings
+
+```bash
+python -m ingest.refresh --source file --from-file data/snapshots/seed.json
+python -m ingest.refresh --source fandango
+```
+
+Live Fandango fetch is best-effort and must not invent rows. If a page cannot be parsed, last-good data stays loaded. See [docs/cloud-agent-refresh.md](docs/cloud-agent-refresh.md).
+
+v1 roster: AMC and Regal houses in Manhattan. Alamo Drafthouse Lower Manhattan is planned for v2.
+
+## Host on Railway
+
+1. New project → deploy from GitHub → `njm-cursor-x/mf-backend`.
+2. Variables: `MF_API_KEY=mf_live_…` (use a minted key).
+3. Confirm `GET https://<your-app>.up.railway.app/health` returns `{"status":"ok"}` without VPN.
+
+Dockerfile and `Procfile` are in the repo. This is a long-lived process, not GitHub Pages or Vercel.
+
+## Tests
+
+```bash
+pytest -q
+```
