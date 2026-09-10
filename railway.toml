@@ -7,3 +7,5 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 healthcheckPath = "/health"
 healthcheckTimeout = 100
+# Must be a shell so $PORT expands. Railpack's bare uvicorn line does not.
+startCommand = "/bin/sh -c './start.sh'"
