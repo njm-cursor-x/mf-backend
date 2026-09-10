@@ -1,4 +1,5 @@
 import hashlib
+import os
 from collections.abc import Generator
 from datetime import datetime, timezone
 
@@ -23,8 +24,12 @@ def hash_key(plaintext: str) -> str:
     return hashlib.sha256(plaintext.encode("utf-8")).hexdigest()
 
 
+def boot_key_plaintext() -> str:
+    return (os.environ.get("MF_API_KEY") or settings.mf_api_key or "").strip()
+
+
 def upsert_boot_key(db: Session) -> None:
-    plaintext = settings.mf_api_key.strip()
+    plaintext = boot_key_plaintext()
     if not plaintext:
         return
     digest = hash_key(plaintext)
@@ -50,6 +55,13 @@ def require_api_key(
     if not raw_key:
         raise ApiError(401, "UNAUTHORIZED", "Missing or invalid API key.")
     digest = hash_key(raw_key)
+    boot = boot_key_plaintext()
+    if boot and hash_key(boot) == digest:
+        return ApiKey(
+            name="boot-env",
+            key_hash=digest,
+            created_at=datetime.now(timezone.utc).replace(tzinfo=None),
+        )
     key = db.scalar(
         select(ApiKey).where(ApiKey.key_hash == digest, ApiKey.revoked_at.is_(None))
     )
