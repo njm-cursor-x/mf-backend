@@ -72,3 +72,12 @@ class MetaResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     status: str = Field(examples=["ok"])
+    api_key_configured: bool = Field(
+        examples=[True],
+        description="True when MF_API_KEY is set in the process env. Does not reveal the key.",
+    )
+    commit: str = Field(
+        default="",
+        examples=["6bcf742"],
+        description="Short git SHA from RAILWAY_GIT_COMMIT_SHA when hosted.",
+    )

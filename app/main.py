@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -23,6 +24,10 @@ async def lifespan(_app: FastAPI):
     with SessionLocal() as db:
         bootstrap_if_empty(db)
         upsert_boot_key(db)
+    print(
+        "startup: MF_API_KEY configured=" + str(bool(os.environ.get("MF_API_KEY"))),
+        flush=True,
+    )
     yield
 
 

@@ -1,7 +1,15 @@
 def test_health_is_public(client):
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["api_key_configured"] is True
+
+
+def test_bearer_key(client, auth_headers):
+    key = auth_headers["X-API-Key"]
+    response = client.get("/meta", headers={"Authorization": f"Bearer {key}"})
+    assert response.status_code == 200
 
 
 def test_missing_key(client):

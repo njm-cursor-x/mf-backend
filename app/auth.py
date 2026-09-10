@@ -3,7 +3,7 @@ import os
 from collections.abc import Generator
 from datetime import datetime, timezone
 
-from fastapi import Depends, Security
+from fastapi import Depends, Request, Security
 from fastapi.security import APIKeyHeader
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -24,8 +24,22 @@ def hash_key(plaintext: str) -> str:
     return hashlib.sha256(plaintext.encode("utf-8")).hexdigest()
 
 
+def _clean_secret(value: str | None) -> str:
+    return (value or "").strip().strip('"').strip("'")
+
+
 def boot_key_plaintext() -> str:
-    return (os.environ.get("MF_API_KEY") or settings.mf_api_key or "").strip()
+    return _clean_secret(os.environ.get("MF_API_KEY") or settings.mf_api_key)
+
+
+def extract_presented_key(request: Request, header_key: str | None) -> str:
+    presented = _clean_secret(header_key) or _clean_secret(request.headers.get("x-api-key"))
+    if presented:
+        return presented
+    auth = request.headers.get("authorization") or ""
+    if auth.lower().startswith("bearer "):
+        return _clean_secret(auth[7:])
+    return ""
 
 
 def upsert_boot_key(db: Session) -> None:
@@ -49,12 +63,14 @@ def upsert_boot_key(db: Session) -> None:
 
 
 def require_api_key(
+    request: Request,
     raw_key: str | None = Security(api_key_header),
     db: Session = Depends(get_db),
 ) -> ApiKey:
-    if not raw_key:
+    presented = extract_presented_key(request, raw_key)
+    if not presented:
         raise ApiError(401, "UNAUTHORIZED", "Missing or invalid API key.")
-    digest = hash_key(raw_key)
+    digest = hash_key(presented)
     boot = boot_key_plaintext()
     if boot and hash_key(boot) == digest:
         return ApiKey(

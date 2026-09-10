@@ -1,5 +1,8 @@
+import os
+
 from fastapi import APIRouter
 
+from app.auth import boot_key_plaintext
 from app.schemas import HealthResponse
 
 router = APIRouter(tags=["meta"])
@@ -13,4 +16,9 @@ router = APIRouter(tags=["meta"])
     response_model=HealthResponse,
 )
 def health() -> HealthResponse:
-    return HealthResponse(status="ok")
+    sha = os.environ.get("RAILWAY_GIT_COMMIT_SHA") or os.environ.get("RAILWAY_GIT_COMMIT") or ""
+    return HealthResponse(
+        status="ok",
+        api_key_configured=bool(boot_key_plaintext()),
+        commit=sha[:8],
+    )
