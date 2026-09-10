@@ -8,7 +8,7 @@ from app.auth import upsert_boot_key
 from app.config import settings
 from app.db import SessionLocal, init_db
 from app.errors import ApiError, ErrorBody, api_error_handler
-from app.routers import health, meta, movies, showtimes, theaters, zips
+from app.routers import health, ingest, meta, movies, showtimes, theaters, zips
 from ingest.load import bootstrap_if_empty
 
 ERROR_RESPONSES = {
@@ -37,6 +37,7 @@ app = FastAPI(
     description=(
         "Query ZIP, then a spoken movie title, then showtimes. "
         "All query routes require the `X-API-Key` header. "
+        "`POST /ingest/snapshots` loads a validated snapshot into the live database. "
         "`GET /health` is public. Coverage is Manhattan only."
     ),
     version="0.1.0",
@@ -47,6 +48,7 @@ app = FastAPI(
 app.add_exception_handler(ApiError, api_error_handler)
 app.include_router(health.router)
 app.include_router(meta.router)
+app.include_router(ingest.router)
 app.include_router(zips.router)
 app.include_router(movies.router)
 app.include_router(theaters.router)

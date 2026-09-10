@@ -15,5 +15,6 @@ def test_operation_ids_present(client):
         "get_movie",
         "list_theaters",
         "get_showtimes",
+        "ingest_snapshot",
     }.issubset(ids)
     assert spec["components"]["securitySchemes"]["ApiKeyAuth"]["name"] == "X-API-Key"

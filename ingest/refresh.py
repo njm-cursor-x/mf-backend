@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+
+import httpx
 
 from app.config import DATA_DIR
 from app.db import SessionLocal, init_db
@@ -44,17 +47,45 @@ def refresh_from_fandango() -> int:
     return 1 if failed else 0
 
 
+def post_snapshot(base_url: str, path: Path, api_key: str) -> int:
+    target = base_url.rstrip("/") + "/ingest/snapshots"
+    response = httpx.post(
+        target,
+        content=path.read_text(encoding="utf-8"),
+        headers={"X-API-Key": api_key, "Content-Type": "application/json"},
+        timeout=60.0,
+    )
+    print(f"POST {target} -> {response.status_code} {response.text}")
+    return 0 if response.status_code == 200 else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Refresh the showtimes snapshot")
     parser.add_argument("--source", choices=["fandango", "file"], default="file")
     parser.add_argument("--from-file", type=Path, default=None)
+    parser.add_argument(
+        "--post-url",
+        default=None,
+        help="Live API origin, e.g. https://web-production-b3a9ce.up.railway.app",
+    )
     args = parser.parse_args(argv)
 
     if args.source == "file" or args.from_file:
         path = args.from_file or latest_snapshot_path()
         refresh_from_file(path)
-        return 0
-    return refresh_from_fandango()
+        code = 0
+    else:
+        path = latest_snapshot_path()
+        code = refresh_from_fandango()
+
+    if args.post_url:
+        key = (os.environ.get("MF_API_KEY") or "").strip()
+        if not key:
+            print("MF_API_KEY is required with --post-url")
+            return 1
+        posted = post_snapshot(args.post_url, path, key)
+        return posted if posted else code
+    return code
 
 
 if __name__ == "__main__":
