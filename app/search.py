@@ -25,7 +25,7 @@ def score_title(query: str, title: str) -> int:
     token = fuzz.token_set_ratio(q, t)
     partial = fuzz.partial_ratio(q, t)
     ratio = fuzz.ratio(q, t)
-    return max(token, partial, ratio)
+    return int(round(max(token, partial, ratio)))
 
 
 def rank_movies(query: str, movies: list, limit: int = 5, floor: int = 62) -> list:

@@ -26,12 +26,6 @@ def test_unknown_movie(client, auth_headers):
 
 
 def test_spoken_title_search(client, auth_headers):
-    response = client.get(
-        "/movies/search",
-        params={"q": "jurasic... wait no, the odysy"},
-        headers=auth_headers,
-    )
-    # still should miss; use a real near-miss
     response = client.get("/movies/search", params={"q": "the odysy"}, headers=auth_headers)
     assert response.status_code == 200
     matches = response.json()["matches"]
