@@ -1,0 +1,110 @@
+[
+  {
+    "id": "amc-empire-25",
+    "name": "AMC Empire 25",
+    "chain": "AMC",
+    "address": "234 W 42nd St, New York, NY 10036",
+    "zip_code": "10036",
+    "neighborhood": "Times Square",
+    "source_url": "https://www.fandango.com/amc-empire-25-aaodx/theater-page"
+  },
+  {
+    "id": "amc-lincoln-square-13",
+    "name": "AMC Lincoln Square 13",
+    "chain": "AMC",
+    "address": "1998 Broadway, New York, NY 10023",
+    "zip_code": "10023",
+    "neighborhood": "Lincoln Square",
+    "source_url": "https://www.fandango.com/amc-lincoln-square-13-aaoqk/theater-page"
+  },
+  {
+    "id": "amc-34th-street-14",
+    "name": "AMC 34th Street 14",
+    "chain": "AMC",
+    "address": "312 W 34th St, New York, NY 10001",
+    "zip_code": "10001",
+    "neighborhood": "Herald Square",
+    "source_url": "https://www.fandango.com/amc-34th-street-14-aaofk/theater-page"
+  },
+  {
+    "id": "amc-kips-bay-15",
+    "name": "AMC Kips Bay 15",
+    "chain": "AMC",
+    "address": "570 2nd Ave, New York, NY 10016",
+    "zip_code": "10016",
+    "neighborhood": "Kips Bay",
+    "source_url": "https://www.fandango.com/amc-kips-bay-15-aaogg/theater-page"
+  },
+  {
+    "id": "amc-village-7",
+    "name": "AMC Village 7",
+    "chain": "AMC",
+    "address": "66 3rd Ave, New York, NY 10003",
+    "zip_code": "10003",
+    "neighborhood": "East Village",
+    "source_url": "https://www.fandango.com/amc-village-7-aaokw/theater-page"
+  },
+  {
+    "id": "amc-19th-st-east-6",
+    "name": "AMC 19th St. East 6",
+    "chain": "AMC",
+    "address": "890 Broadway, New York, NY 10003",
+    "zip_code": "10003",
+    "neighborhood": "Flatiron",
+    "source_url": "https://www.fandango.com/amc-19th-st-east-6-aaocx/theater-page"
+  },
+  {
+    "id": "amc-84th-street-6",
+    "name": "AMC 84th Street 6",
+    "chain": "AMC",
+    "address": "2310 Broadway, New York, NY 10024",
+    "zip_code": "10024",
+    "neighborhood": "Upper West Side",
+    "source_url": "https://www.fandango.com/amc-84th-street-6-aaodz/theater-page"
+  },
+  {
+    "id": "amc-orpheum-7",
+    "name": "AMC Orpheum 7",
+    "chain": "AMC",
+    "address": "1538 3rd Ave, New York, NY 10028",
+    "zip_code": "10028",
+    "neighborhood": "Upper East Side",
+    "source_url": "https://www.fandango.com/amc-orpheum-7-aaoic/theater-page"
+  },
+  {
+    "id": "amc-magic-johnson-harlem",
+    "name": "AMC Magic Johnson Harlem 9",
+    "chain": "AMC",
+    "address": "230 W 125th St, New York, NY 10027",
+    "zip_code": "10027",
+    "neighborhood": "Harlem",
+    "source_url": "https://www.fandango.com/amc-magic-johnson-harlem-9-aaohk/theater-page"
+  },
+  {
+    "id": "regal-union-square",
+    "name": "Regal Union Square",
+    "chain": "Regal",
+    "address": "850 Broadway, New York, NY 10003",
+    "zip_code": "10003",
+    "neighborhood": "Union Square",
+    "source_url": "https://www.fandango.com/regal-union-square-aaqfn/theater-page"
+  },
+  {
+    "id": "regal-e-walk",
+    "name": "Regal E-Walk 13",
+    "chain": "Regal",
+    "address": "247 W 42nd St, New York, NY 10036",
+    "zip_code": "10036",
+    "neighborhood": "Times Square",
+    "source_url": "https://www.fandango.com/regal-e-walk-aaqfb/theater-page"
+  },
+  {
+    "id": "regal-battery-park",
+    "name": "Regal Battery Park",
+    "chain": "Regal",
+    "address": "102 North End Ave, New York, NY 10282",
+    "zip_code": "10282",
+    "neighborhood": "Battery Park City",
+    "source_url": "https://www.fandango.com/regal-battery-park-aaqfa/theater-page"
+  }
+]
