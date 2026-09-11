@@ -56,6 +56,7 @@ curl -s -H "X-API-Key: $KEY" "http://127.0.0.1:8000/showtimes?movie_id=the-odyss
 | `get_movie` | GET | `/movies/{movie_id}` |
 | `list_theaters` | GET | `/theaters` |
 | `get_showtimes` | GET | `/showtimes` |
+| `ingest_snapshot` | POST | `/ingest/snapshots` |
 
 OpenAPI: `http://127.0.0.1:8000/openapi.json` (public, no secrets).
 
@@ -63,10 +64,14 @@ Non-Manhattan ZIPs return `404` with `"code": "OUT_OF_AREA"`.
 
 ## Refresh listings
 
+The voice agent reads the live Railway database. After a scrape, push the snapshot:
+
 ```bash
 python -m ingest.refresh --source file --from-file data/snapshots/seed.json
-python -m ingest.refresh --source fandango
+python -m ingest.refresh --source fandango --post-url https://web-production-b3a9ce.up.railway.app
 ```
+
+`POST /ingest/snapshots` (same `X-API-Key`) loads the JSON into the running process. Query routes see the new rows as soon as that call returns 200. Still commit the snapshot on `main` so the next deploy does not revert to an older file.
 
 Live Fandango fetch is best-effort and must not invent rows. If a page cannot be parsed, last-good data stays loaded. See [docs/cloud-agent-refresh.md](docs/cloud-agent-refresh.md).
 
