@@ -20,10 +20,10 @@ python -m ingest.refresh --source fandango --post-url https://web-production-b3a
 curl -s -H "X-API-Key: $MF_API_KEY" https://web-production-b3a9ce.up.railway.app/meta
 ```
 
-`ingest_status` must be `ok`. Do not report the job finished until this is true.
-5. If Fandango pages changed, **fix only `ingest/fandango.py`**. Do not invent showtimes. Do not write freeform rows into SQLite.
-6. If the live fetch fails, the CLI keeps the last-good snapshot and still POSTs that. Report which theater IDs failed.
-7. Commit the snapshot JSON when it validates. Do not commit plaintext API keys. Railway auto-deploys `main`; the commit is durability, not the live load.
+`ingest_status` must be `ok`. That is the pass/fail for the job. Voice routes using last-good seed after a Fandango block is a **successful** run, not a failure.
+5. If Fandango returns HTML and the page shape changed, **fix only `ingest/fandango.py`**. Do not invent showtimes. Do not write freeform rows into SQLite.
+6. If the live fetch fails (Akamai 403 from a cloud IP is expected), the CLI keeps the last-good snapshot and still POSTs that. Report which theater IDs failed. Do not treat that as a job failure when `/meta` is `ok`.
+7. Commit a new snapshot JSON only when one was written. Do not commit plaintext API keys. Railway auto-deploys `main`; the commit is durability, not the live load.
 
 ## Rules
 
