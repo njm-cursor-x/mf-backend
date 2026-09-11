@@ -73,6 +73,8 @@ python -m ingest.refresh --source fandango --post-url https://web-production-b3a
 
 `POST /ingest/snapshots` (same `X-API-Key`) loads the JSON into the running process. Query routes see the new rows as soon as that call returns 200. Still commit the snapshot on `main` so the next deploy does not revert to an older file.
 
+Cursor cloud IPs are blocked by Fandango/Akamai (403). A Mon/Thu run that POSTs last-good seed and gets `/meta` `ok` is a successful job. It is not this week's theater board.
+
 Live Fandango fetch is best-effort and must not invent rows. If a page cannot be parsed, last-good data stays loaded. See [docs/cloud-agent-refresh.md](docs/cloud-agent-refresh.md).
 
 v1 roster: AMC and Regal houses in Manhattan. Alamo Drafthouse Lower Manhattan is planned for v2.

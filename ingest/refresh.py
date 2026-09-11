@@ -84,7 +84,14 @@ def main(argv: list[str] | None = None) -> int:
             print("MF_API_KEY is required with --post-url")
             return 1
         posted = post_snapshot(args.post_url, path, key)
-        return posted if posted else code
+        if posted != 0:
+            return posted
+        if code != 0:
+            print(
+                "live catalog posted from last-good snapshot; "
+                "Fandango fetch had failures (Akamai/WAF or unmapped HTML)"
+            )
+        return 0
     return code
 
 
