@@ -36,6 +36,10 @@ python -m app.keys revoke --name grok-voice
 
 Only the SHA-256 hash is stored. Never commit plaintext keys. On Railway, set `MF_API_KEY` in Variables (or mint a key after first boot and keep it in Variables).
 
+## Voice agent
+
+The Grok Voice Agent is a separate product. Give it your spoken script plus [docs/voice-agent.md](docs/voice-agent.md). Point its tools at `https://mf-backend-production.up.railway.app/openapi.json` with `X-API-Key`. Call order is ZIP → search title → showtimes. Do not give the voice agent ingest.
+
 ## Zip then title
 
 ```bash
@@ -58,7 +62,7 @@ curl -s -H "X-API-Key: $KEY" "http://127.0.0.1:8000/showtimes?movie_id=the-odyss
 | `get_showtimes` | GET | `/showtimes` |
 | `ingest_snapshot` | POST | `/ingest/snapshots` |
 
-OpenAPI: `http://127.0.0.1:8000/openapi.json` (public, no secrets).
+OpenAPI: `https://mf-backend-production.up.railway.app/openapi.json` (public, no secrets).
 
 Non-Manhattan ZIPs return `404` with `"code": "OUT_OF_AREA"`.
 
