@@ -2,7 +2,7 @@
 
 This repo is the lookup brain. The voice agent is the mouth. Keep those jobs separate.
 
-You write the **script** (tone, jokes, confirmations). This file is what APIs to call and when. Paste both into the Grok Voice Agent: script + this contract. Point the agent’s HTTP tools at the live OpenAPI spec, not at a guessed URL list.
+The spoken script is [script.md](script.md). This file is what APIs to call and when. Point the Grok Voice Agent at **both**. Point the agent’s HTTP tools at the live OpenAPI spec, not at a guessed URL list.
 
 ## Wire-up
 
