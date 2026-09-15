@@ -1,4 +1,12 @@
-# Weekly showtimes refresh
+# Cursor cloud-agent refresh (do not use for Fandango)
+
+Cursor cloud IPs are blocked by Fandango/Akamai. The live fetch path is a **GrokBot** using the Fandango UI. See [grokbot-refresh.md](grokbot-refresh.md).
+
+This file is only for reloading a snapshot file into a local DB or Railway after a GrokBot (or a human) already wrote JSON:
+
+```bash
+python -m ingest.refresh --source file --from-file data/snapshots/seed.json --post-url https://<railway-host>
+```
 
 Run this as a Cursor cloud agent **once or twice a week** (Thursday evening or Friday morning, optional mid-week). This agent refreshes data. It does not host the API.
 
