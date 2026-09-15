@@ -38,7 +38,7 @@ Only the SHA-256 hash is stored. Never commit plaintext keys. On Railway, set `M
 
 ## Voice agent
 
-The Grok Voice Agent is a separate product. Give it your spoken script plus [docs/voice-agent.md](docs/voice-agent.md). Point its tools at `https://mf-backend-production.up.railway.app/openapi.json` with `X-API-Key`. Call order is ZIP → search title → showtimes. Do not give the voice agent ingest.
+The Grok Voice Agent is a separate product. Point it at **both** [docs/script.md](docs/script.md) (what to say) and [docs/voice-agent.md](docs/voice-agent.md) (which APIs to call). Import tools from `https://mf-backend-production.up.railway.app/openapi.json` with `X-API-Key`. Call order is ZIP → search title → showtimes. Do not give the voice agent ingest. Script alone is not enough.
 
 ## Zip then title
 
